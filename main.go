@@ -75,7 +75,9 @@ func main() {
 		flag.Usage()
 		os.Exit(2)
 	}
-
+        //Disable ssl verification
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+  
 	http.DefaultClient.Timeout = 10 * time.Second
 	s := &http.Server{
 		Addr:         addr,
