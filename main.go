@@ -65,7 +65,7 @@ func main() {
 	flag.StringVar(&esURL, "esURL", esURL, "Elasticsearch HTTP URL")
 	flag.BoolVar(&showVersion, "version", false, "Print version number and exit")
 	flag.Parse()
-
+	
 	if showVersion {
 		fmt.Println(versionString)
 		os.Exit(0)
@@ -160,6 +160,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	req.Header.Set("User-Agent", versionString)
 	req.Header.Set("Content-Type", "application/json")
+
+	esUser := os.Getenv("ES_USER")
+	esPass := os.Getenv("ES_PASS")
+
+	if len(esUser) != 0 && len(esPass) != 0 {
+		req.SetBasicAuth(esUser, esPass)
+	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
